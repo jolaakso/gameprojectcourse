@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://BlockyChunk.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+# Intended to be overwritten
+func get_block_type(x, y, z):
+	return 1
+
+func generate():
+	var chunk = get_node(\"BlockyChunk\")
+	for x in range(chunk.length):
+		for y in range(chunk.width):
+			for z in range(chunk.height):
+				var block_type = get_block_type(x, y, z)
+				chunk.set_block(block_type, [x, y, z])
+	chunk.refresh_blocks()
+"
+
+[node name="ChunkGenerator" type="Spatial"]
+script = SubResource( 1 )
+
+[node name="BlockyChunk" parent="." instance=ExtResource( 2 )]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://TestBlocky.gd" type="Script" id=1]
 [ext_resource path="res://PauseMenu.tscn" type="PackedScene" id=2]
 [ext_resource path="res://GameEnvironment.gd" type="Script" id=3]
+[ext_resource path="res://FlatGenerator.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CylinderMesh" id=1]
 
@@ -13,7 +14,7 @@ albedo_color = Color( 0.176471, 0.423529, 0.494118, 1 )
 script = ExtResource( 3 )
 
 [node name="Camera" type="ClippedCamera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.981477, 0.19158, 0, -0.19158, 0.981477, 0, 0.851247, 2.85258 )
+transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, -5.91, 5, 4 )
 
 [node name="TestBlocky" type="MeshInstance" parent="." groups=["persistent"]]
 mesh = SubResource( 1 )
@@ -21,5 +22,12 @@ material/0 = SubResource( 2 )
 script = ExtResource( 1 )
 
 [node name="PauseMenu" parent="." instance=ExtResource( 2 )]
+
+[node name="FlatGenerator2" parent="." instance=ExtResource( 4 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 0 )
+visible = false
+
+[node name="FlatGenerator" parent="." instance=ExtResource( 4 )]
+visible = false
 
 [connection signal="game_saved" from="PauseMenu" to="." method="_on_PauseMenu_game_saved"]
