@@ -1,8 +1,13 @@
 extends Spatial
 
+var decider: BlockDecider = BlockDecider.new()
+
 # Intended to be overwritten
 func get_block_type(x, y, z):
-	return 1
+	return decider.get_block_type(x, y, z)
+
+func set_block_decider(decider: BlockDecider):
+	self.decider = decider
 
 func generate():
 	var chunk = get_node("BlockyChunk")

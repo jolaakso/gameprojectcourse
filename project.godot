@@ -8,6 +8,22 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "BlockDecider",
+"language": "GDScript",
+"path": "res://BlockDecider.gd"
+}, {
+"base": "BlockDecider",
+"class": "FlatDecider",
+"language": "GDScript",
+"path": "res://FlatDecider.gd"
+} ]
+_global_script_class_icons={
+"BlockDecider": "",
+"FlatDecider": ""
+}
+
 [application]
 
 config/name="gameprojectcourse"

@@ -1,11 +1,11 @@
 extends WorldEnvironment
 
 func _ready():
-	var f = get_node("FlatGenerator")
-	f.height = 10
+	var f = get_node("ChunkGenerator")
+	f.set_block_decider(FlatDecider.new(1))
 	f.generate()
-	var f2 = get_node("FlatGenerator2")
-	f2.height = 1
+	var f2 = get_node("ChunkGenerator2")
+	f2.set_block_decider(FlatDecider.new(10))
 	f2.generate()
 	if GameSave.saved_data:
 		for obj in GameSave.saved_data:
