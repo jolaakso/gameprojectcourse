@@ -32,7 +32,8 @@ func mesh_blocks(blocks: BlockData) -> Dictionary:
 	return { vertices = vertices, normals = normals }
 
 func mesh_single_block(blocks, x, y, z) -> Dictionary:
-	if blocks.at_coords(x, y, z) == 0:
+	var this_block_type = blocks.at_coords(x, y, z)
+	if this_block_type == 0:
 		return { verts = [], normals = [] }
 	var coords_vec = Vector3(x, y, z)
 	# Create a copy
@@ -40,25 +41,29 @@ func mesh_single_block(blocks, x, y, z) -> Dictionary:
 	var cube_verts = []
 	var cube_normals = []
 	
-	cube_verts.append_array(cube_model.BACK_FACE)
-	cube_verts.append_array(cube_model.FRONT_FACE)
+	if z == blocks.width - 1 || this_block_type != blocks.at_coords(x, y, z+1):
+		cube_verts.append_array(cube_model.BACK_FACE)
+		cube_normals.append_array(cube_model.BACK_NORMALS)
 
-
-	cube_verts.append_array(cube_model.UP_FACE)
-	cube_verts.append_array(cube_model.DOWN_FACE)
-
-
-	cube_verts.append_array(cube_model.RIGHT_FACE)
-	cube_verts.append_array(cube_model.LEFT_FACE)
-
+	if z == 0 || this_block_type != blocks.at_coords(x, y, z-1):
+		cube_verts.append_array(cube_model.FRONT_FACE)
+		cube_normals.append_array(cube_model.FRONT_NORMALS)
 	
-	cube_normals.append_array(cube_model.BACK_NORMALS)
-	cube_normals.append_array(cube_model.FRONT_NORMALS)
-	cube_normals.append_array(cube_model.UP_NORMALS)
-	cube_normals.append_array(cube_model.DOWN_NORMALS)
+	if y == blocks.height - 1 || this_block_type != blocks.at_coords(x, y+1, z):
+		cube_verts.append_array(cube_model.UP_FACE)
+		cube_normals.append_array(cube_model.UP_NORMALS)
 
-	cube_normals.append_array(cube_model.RIGHT_NORMALS)
-	cube_normals.append_array(cube_model.LEFT_NORMALS)
+	if y == 0 || this_block_type != blocks.at_coords(x, y-1, z):
+		cube_verts.append_array(cube_model.DOWN_FACE)
+		cube_normals.append_array(cube_model.DOWN_NORMALS)
+
+	if x == blocks.length - 1 || this_block_type != blocks.at_coords(x+1, y, z):
+		cube_verts.append_array(cube_model.RIGHT_FACE)
+		cube_normals.append_array(cube_model.RIGHT_NORMALS)
+
+	if x == 0 || this_block_type != blocks.at_coords(x-1, y, z):
+		cube_verts.append_array(cube_model.LEFT_FACE)
+		cube_normals.append_array(cube_model.LEFT_NORMALS)
 
 	for i in range(0, cube_verts.size()):
 		cube_verts[i] += coords_vec

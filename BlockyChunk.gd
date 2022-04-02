@@ -19,6 +19,7 @@ func refresh_blocks():
 	blocks_mesher.refresh_mesh(blocks)
 	var mesh = blocks_mesher.mesh
 	if mesh:
+		print("tris: " + String(mesh.get_faces().size() / 3))
 		get_node("ChunkCollision").shape = mesh.create_trimesh_shape()
 
 func coords_to_index(coords: Array) -> int:
