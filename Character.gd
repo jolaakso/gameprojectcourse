@@ -1,9 +1,12 @@
 extends KinematicBody
 
-export var gravity: Vector3 = Vector3(0, -1, 0)
+export var gravity: Vector3 = Vector3(0, -10, 0)
 export var mouse_sens: float = 1
 
+var acceleration_press: float = 10
+
 var acceleration: Vector3
+var friction: float = 3
 var velocity: Vector3
 
 func _ready():
@@ -12,21 +15,27 @@ func _ready():
 
 func _physics_process(delta):
 	var move_dir = get_input().rotated(-rotation.y)
-	var move_acceleration = movement_acceleration(delta, move_dir)
-	acceleration += move_acceleration
-	acceleration += friction(delta)
-	velocity += (acceleration + gravity) * delta
-	move_and_slide(Vector3(move_dir.x, 0, move_dir.y) * 5, Vector3.UP)
+	# apply friction
+	velocity = velocity_after_friction(delta)
+	velocity = movement_acceleration(delta, move_dir)
+	velocity += gravity * delta
+	move_and_slide(velocity, Vector3.UP)
 
-func friction(delta):
-	var friction_delta = -velocity * 4 * delta
-	if is_on_floor():
-		return Vector3(friction_delta.x, 0, friction_delta.z)
-	return Vector3.ZERO
+func velocity_after_friction(delta):
+	var speed = velocity.length()
+	if speed != 0:
+		return velocity * max(1 - friction * delta, 0)
+	return velocity
 
 func movement_acceleration(delta, dir: Vector2) -> Vector3:
-	var move_global = dir.rotated(-rotation.y).normalized()
-	return Vector3(move_global.x, 0, move_global.y) * delta
+	var move_global_xy = dir.normalized()
+
+	var move_global = Vector3(move_global_xy.x, 0, move_global_xy.y)
+	var move_local = transform.basis * move_global
+	var acceleration_length = acceleration_press * delta
+	var projected_velocity = move_global.dot(velocity)
+	
+	return velocity + move_global * acceleration_length
 
 func get_input():
 	var move_direction = Vector2.ZERO

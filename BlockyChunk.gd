@@ -17,7 +17,9 @@ func set_block(block_type, coords: Array):
 func refresh_blocks():
 	var blocks_mesher = get_node("BlocksMesher")
 	blocks_mesher.refresh_mesh(blocks)
-	get_node("ChunkCollision").make_convex_from_brothers()
+	var mesh = blocks_mesher.mesh
+	if mesh:
+		get_node("ChunkCollision").shape = mesh.create_trimesh_shape()
 
 func coords_to_index(coords: Array) -> int:
 	var x = coords[0]

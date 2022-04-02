@@ -11,8 +11,8 @@ var UP_FACE =    [Vector3(1, 1, 1), Vector3(0, 1, 1), Vector3(0, 1, 0),
 				  Vector3(1, 1, 0), Vector3(1, 1, 1), Vector3(0, 1, 0)]
 var LEFT_FACE =  [Vector3(0, 0, 0), Vector3(0, 1, 0), Vector3(0, 1, 1),
 				  Vector3(0, 0, 0), Vector3(0, 1, 1), Vector3(0, 0, 1)]
-var RIGHT_FACE = [Vector3(1, 0, 0), Vector3(1, 1, 0), Vector3(1, 1, 1),
-				  Vector3(1, 0, 0), Vector3(1, 1, 1), Vector3(1, 0, 1)]
+var RIGHT_FACE = [Vector3(1, 1, 1), Vector3(1, 1, 0), Vector3(1, 0, 0),
+				  Vector3(1, 0, 1), Vector3(1, 1, 1), Vector3(1, 0, 0)]
 
 var FRONT_NORMALS = [Vector3.FORWARD, Vector3.FORWARD, Vector3.FORWARD,
 					 Vector3.FORWARD, Vector3.FORWARD, Vector3.FORWARD]
