@@ -3,9 +3,6 @@ extends Control
 signal back_to_main
 signal game_saved
 
-func _ready():
-	pass # Replace with function body.
-
 func _input(event):
 	if event.is_action_pressed("pause_menu"):
 		toggle_pause()
@@ -33,6 +30,10 @@ func toggle_pause():
 	if !get_node("PauseMenuMain").visible:
 		return
 	var was_paused = get_tree().paused
+	if was_paused:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	else:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	get_tree().paused = !was_paused
 	visible = !was_paused
 

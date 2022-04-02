@@ -12,8 +12,8 @@ func set_block_decider(decider: BlockDecider):
 func generate():
 	var chunk = get_node("BlockyChunk")
 	for x in range(chunk.length):
-		for y in range(chunk.width):
-			for z in range(chunk.height):
+		for y in range(chunk.height):
+			for z in range(chunk.width):
 				var block_type = get_block_type(x, y, z)
 				chunk.set_block(block_type, [x, y, z])
 	chunk.refresh_blocks()

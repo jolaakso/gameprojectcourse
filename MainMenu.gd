@@ -3,6 +3,7 @@ extends Control
 var quit_confirmation_scene = load("res://QuitConfirmation.tscn")
 
 func _ready():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if GameSave.saved_game_present():
 		get_node("VBoxContainer/LoadButton").visible = true
 

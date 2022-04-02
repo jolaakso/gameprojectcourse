@@ -1,34 +1,23 @@
-extends Spatial
+extends StaticBody
 
 # Must be powers of 2
 var length = 16
 var width = 16
 var height = 16
 
-var blocks_amount = length * width * height
-
-var blocks: Array
+var blocks: BlockData
 
 func _ready():
-	for i in range(blocks_amount):
-		blocks.append(0)
+	blocks = BlockData.new(length, width, height)
 	refresh_blocks()
 
 func set_block(block_type, coords: Array):
-	blocks[coords_to_index(coords)] = block_type
+	blocks.set_block_to(block_type, coords)
 
 func refresh_blocks():
 	var blocks_mesher = get_node("BlocksMesher")
-	for i in range(blocks_amount):
-		if blocks[i] == 1:
-			blocks_mesher.set_block(i, index_to_coords(i))
-
-func index_to_coords(ix: int) -> Array:
-	var x = ix % length
-	var y = (ix / length) % width
-	var z = ix / (width * length)
-	
-	return [x, y, z]
+	blocks_mesher.refresh_mesh(blocks)
+	get_node("ChunkCollision").make_convex_from_brothers()
 
 func coords_to_index(coords: Array) -> int:
 	var x = coords[0]

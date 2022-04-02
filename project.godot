@@ -10,18 +10,36 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Reference",
+"class": "BlockData",
+"language": "GDScript",
+"path": "res://BlockData.gd"
+}, {
+"base": "Reference",
 "class": "BlockDecider",
 "language": "GDScript",
 "path": "res://BlockDecider.gd"
+}, {
+"base": "Reference",
+"class": "Cube",
+"language": "GDScript",
+"path": "res://Cube.gd"
 }, {
 "base": "BlockDecider",
 "class": "FlatDecider",
 "language": "GDScript",
 "path": "res://FlatDecider.gd"
+}, {
+"base": "BlockDecider",
+"class": "NoiseDecider",
+"language": "GDScript",
+"path": "res://NoiseDecider.gd"
 } ]
 _global_script_class_icons={
+"BlockData": "",
 "BlockDecider": "",
-"FlatDecider": ""
+"Cube": "",
+"FlatDecider": "",
+"NoiseDecider": ""
 }
 
 [application]
@@ -40,6 +58,26 @@ pause_menu={
 "deadzone": 0.5,
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777217,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
 , Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777225,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+move_forward={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":69,"unicode":0,"echo":false,"script":null)
+ ]
+}
+move_backward={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":68,"unicode":0,"echo":false,"script":null)
+ ]
+}
+move_left={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":83,"unicode":0,"echo":false,"script":null)
+ ]
+}
+move_right={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":0,"physical_scancode":70,"unicode":0,"echo":false,"script":null)
  ]
 }
 

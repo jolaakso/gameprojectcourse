@@ -2,11 +2,12 @@ extends WorldEnvironment
 
 func _ready():
 	var f = get_node("ChunkGenerator")
-	f.set_block_decider(FlatDecider.new(1))
+	f.set_block_decider(NoiseDecider.new(0, 2, 0))
 	f.generate()
 	var f2 = get_node("ChunkGenerator2")
-	f2.set_block_decider(FlatDecider.new(10))
+	f2.set_block_decider(NoiseDecider.new(-16, 2, 0))
 	f2.generate()
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if GameSave.saved_data:
 		for obj in GameSave.saved_data:
 			if obj["id"] == "TestBlocky":
