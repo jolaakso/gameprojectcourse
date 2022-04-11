@@ -12,6 +12,7 @@ var velocity: Vector3
 func _ready():
 	acceleration = Vector3.ZERO
 	velocity = Vector3.ZERO
+	get_node("Head/RayCast").add_exception(self)
 
 func _physics_process(delta):
 	var move_dir = get_input().rotated(-rotation.y)
@@ -22,10 +23,7 @@ func _physics_process(delta):
 	move_and_slide(velocity, Vector3.UP)
 
 func velocity_after_friction(delta):
-	var speed = velocity.length()
-	if speed != 0:
-		return velocity * max(1 - friction * delta, 0)
-	return velocity
+	return velocity * max(1 - friction * delta, 0)
 
 func movement_acceleration(delta, dir: Vector2) -> Vector3:
 	var move_global_xy = dir.normalized()
@@ -39,6 +37,9 @@ func movement_acceleration(delta, dir: Vector2) -> Vector3:
 
 func get_input():
 	var move_direction = Vector2.ZERO
+	
+	if Input.is_action_just_pressed("place_block"):
+		place_block()
 	
 	if Input.is_action_pressed("move_forward"):
 		move_direction += Vector2.UP
@@ -55,11 +56,19 @@ func rotate_character(rotations):
 	rotate_y(rotations / (2 * PI))
 
 func tilt_head(tilt_rotations):
-	var head = get_node("Camera")
+	var head = get_node("Head")
 	var current_rotation = head.rotation.x
 	var tilt_radians = tilt_rotations / (2 * PI)
 	var next_rotation = clamp(tilt_radians + current_rotation, -PI/3, PI/2)
 	head.rotation = Vector3(next_rotation, 0, 0)
+
+func place_block():
+	var raycast = get_node("Head/RayCast")
+	raycast.force_raycast_update()
+	if raycast.is_colliding():
+		var collider = raycast.get_collider()
+		if collider.has_method("place_block"):
+			collider.place_block(1, raycast.get_collision_point(), raycast.get_collision_normal())
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:

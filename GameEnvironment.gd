@@ -1,12 +1,9 @@
 extends WorldEnvironment
 
 func _ready():
-	var f = get_node("ChunkGenerator")
-	f.set_block_decider(NoiseDecider.new(0, 2, 0))
-	f.generate()
-	var f2 = get_node("ChunkGenerator2")
-	f2.set_block_decider(NoiseDecider.new(-16, 2, 0))
-	f2.generate()
+	var rolling_chunks = get_node("RollingChunks")
+	rolling_chunks.spawn_chunks_around(0, 0, 0, true, 2, 1, 2)
+	call_deferred("spawn_perimeter")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if GameSave.saved_data:
 		for obj in GameSave.saved_data:
@@ -30,3 +27,7 @@ func _on_PauseMenu_game_saved():
 	save_game(save_file)
 	save_file.close()
 	get_node("PauseMenu").confirm_game_saved()
+
+func spawn_perimeter():
+	var rolling_chunks = get_node("RollingChunks")
+	rolling_chunks.spawn_chunks_around(0, 0, 0)
