@@ -6,8 +6,11 @@ export var mouse_sens: float = 1
 var acceleration_press: float = 10
 
 var acceleration: Vector3
-var friction: float = 3
+var friction: float = 3.0
 var velocity: Vector3
+
+signal place_block(chunk_coords, local_coords)
+signal mine_block(chunk_coords, local_coords)
 
 func _ready():
 	acceleration = Vector3.ZERO
@@ -16,14 +19,28 @@ func _ready():
 
 func _physics_process(delta):
 	var move_dir = get_input().rotated(-rotation.y)
+	if is_on_floor():
+		velocity = velocity_after_friction(delta)
+	else:
+		velocity += gravity * delta
 	# apply friction
-	velocity = velocity_after_friction(delta)
 	velocity = movement_acceleration(delta, move_dir)
-	velocity += gravity * delta
-	move_and_slide(velocity, Vector3.UP)
+	move_and_slide(velocity, Vector3.UP, true)
 
 func velocity_after_friction(delta):
 	return velocity * max(1 - friction * delta, 0)
+
+func preview():
+	var raycast = get_node("Head/RayCast")
+	raycast.force_raycast_update()
+	
+	if raycast.is_colliding():
+		var collider = raycast.get_collider()
+		if collider.has_method("get_chunk_coords_adjacent"):
+			var chunk_and_coord = collider.get_chunk_coords_adjacent(raycast.get_collision_point(),
+																	 raycast.get_collision_normal())
+			return chunk_and_coord
+	return null
 
 func movement_acceleration(delta, dir: Vector2) -> Vector3:
 	var move_global_xy = dir.normalized()
@@ -35,11 +52,20 @@ func movement_acceleration(delta, dir: Vector2) -> Vector3:
 	
 	return velocity + move_global * acceleration_length
 
+func jump():
+	if is_on_floor():
+		velocity += Vector3(0, 7, 0)
+
 func get_input():
 	var move_direction = Vector2.ZERO
 	
 	if Input.is_action_just_pressed("place_block"):
 		place_block()
+	elif Input.is_action_just_pressed("mine_block"):
+		mine_block()
+	
+	if Input.is_action_just_pressed("jump"):
+		jump()
 	
 	if Input.is_action_pressed("move_forward"):
 		move_direction += Vector2.UP
@@ -65,10 +91,24 @@ func tilt_head(tilt_rotations):
 func place_block():
 	var raycast = get_node("Head/RayCast")
 	raycast.force_raycast_update()
+	
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
-		if collider.has_method("place_block"):
-			collider.place_block(1, raycast.get_collision_point(), raycast.get_collision_normal())
+		if collider.has_method("get_chunk_coords_adjacent"):
+			var chunk_and_coord = collider.get_chunk_coords_adjacent(raycast.get_collision_point(),
+																	 raycast.get_collision_normal())
+			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords)
+
+func mine_block():
+	var raycast = get_node("Head/RayCast")
+	raycast.force_raycast_update()
+	
+	if raycast.is_colliding():
+		var collider = raycast.get_collider()
+		if collider.has_method("get_chunk_coords_pointed"):
+			var chunk_and_coord = collider.get_chunk_coords_pointed(raycast.get_collision_point(),
+																	 raycast.get_collision_normal())
+			collider.remove_block(chunk_and_coord.local_coords)
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:

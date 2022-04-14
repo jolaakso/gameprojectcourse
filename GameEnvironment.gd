@@ -10,6 +10,25 @@ func _ready():
 			if obj["id"] == "TestBlocky":
 				get_node("TestBlocky").deserialize(obj)
 
+func _process(delta):
+	var preview_block = get_node("PreviewBlock")
+	var character = get_node("Character")
+	
+	var previewing_chunk_block = character.preview()
+
+	if previewing_chunk_block:
+		var chunk_coords = previewing_chunk_block.chunk
+		var local_coords = previewing_chunk_block.local_coords
+		var global_preview_coords = get_node("RollingChunks").previewable_global_coordinates(chunk_coords,
+																							 local_coords)
+		if global_preview_coords:
+			preview_block.visible = true
+			preview_block.translation = global_preview_coords + Vector3.ONE * 0.5
+		else:
+			preview_block.visible = false
+	else:
+		preview_block.visible = false
+
 func serialized_state():
 	var persistables = get_tree().get_nodes_in_group('persistent')
 	var serialized = []
@@ -31,3 +50,10 @@ func _on_PauseMenu_game_saved():
 func spawn_perimeter():
 	var rolling_chunks = get_node("RollingChunks")
 	rolling_chunks.spawn_chunks_around(0, 0, 0)
+
+func _on_Character_place_block(chunk_coords, local_coords):
+	get_node("RollingChunks").place_block_in_chunk(chunk_coords, local_coords)
+
+
+func _on_Character_mine_block(chunk_coords, local_coords):
+	get_node("RollingChunks").mine_block_in_chunk(chunk_coords, local_coords)

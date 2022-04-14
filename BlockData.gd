@@ -27,7 +27,7 @@ func _init(length = 16, width = 16, height = 16, initial_type = 0):
 		blocks.set(i, initial_type)
 
 func set_block_to(type, coords: Array):
-	blocks.set(coords_to_index(coords), type)
+	blocks.set(coords_to_index(coords[0], coords[1], coords[2]), type)
 
 func set_block_at_index_to(type, ix: int):
 	blocks.set(ix, type)
@@ -35,8 +35,44 @@ func set_block_at_index_to(type, ix: int):
 func at_index(ix: int):
 	return blocks[ix]
 
-func at_coords(x, y, z):
-	return blocks[coords_to_index([x, y, z])]
+func at_coords(x: int, y: int, z: int):
+	return blocks[coords_to_index(x, y, z)]
+
+func neighborhood_at(x, y, z) -> Array:
+	var neighborhood = PoolByteArray()
+	neighborhood.resize(6)
+	
+	if x != 0:
+		neighborhood.set(0, at_coords(x-1, y, z))
+	else:
+		neighborhood.set(0, 255)
+
+	if x != length-1:
+		neighborhood.set(1, at_coords(x+1, y, z))
+	else:
+		neighborhood.set(1, 255)
+	
+	if y != 0:
+		neighborhood.set(2, at_coords(x, y-1, z))
+	else:
+		neighborhood.set(2, 255)
+
+	if y != height-1:
+		neighborhood.set(3, at_coords(x, y+1, z))
+	else:
+		neighborhood.set(3, 255)
+
+	if z != 0:
+		neighborhood.set(4, at_coords(x, y, z-1))
+	else:
+		neighborhood.set(4, 255)
+
+	if z != width-1:
+		neighborhood.set(5, at_coords(x-1, y, z+1))
+	else:
+		neighborhood.set(5, 255)
+
+	return neighborhood
 
 func merge(diff: BlockData):
 	for i in range(blocks.size()):
@@ -50,8 +86,5 @@ func index_to_coords(ix: int) -> Array:
 	
 	return [x, y, z]
 
-func coords_to_index(coords: Array) -> int:
-	var x = coords[0]
-	var y = coords[1]
-	var z = coords[2]
+func coords_to_index(x: int, y: int, z: int) -> int:
 	return z * width * length + y * length + x
