@@ -8,6 +8,7 @@ var random_noise: OpenSimplexNoise = OpenSimplexNoise.new()
 var chunk_worker: Thread = Thread.new()
 var generator_queue: Array = []
 var generator_queue_mutex: Mutex = Mutex.new()
+var latest_chunk_coords = [0, 0, 0]
 
 class SpiralSorter:
 	var origin
@@ -16,13 +17,8 @@ class SpiralSorter:
 	# sorts array of arrays of 3 integers so that the ones
 	# that are closer to origin are first
 	func sort_spiral(a, b):
-		# print_debug(origin)
-		# print_debug(a)
-		# print_debug(b)
 		var a_dist = Vector3(a[0], a[1], a[2]).distance_squared_to(origin)
 		var b_dist = Vector3(b[0], b[1], b[2]).distance_squared_to(origin)
-		# print_debug(a_dist)
-		# print_debug(b_dist)
 		return a_dist < b_dist
 
 func _process(_delta):
@@ -30,6 +26,14 @@ func _process(_delta):
 		chunk_worker.wait_to_finish()
 		chunk_worker = Thread.new()
 		chunk_worker.start(self, "process_generation")
+
+func serialize():
+	return {
+		"id": "Chunks",
+		"current_chunk_x": latest_chunk_coords[0],
+		"current_chunk_y": latest_chunk_coords[1],
+		"current_chunk_z": latest_chunk_coords[2],
+	}
 
 func place_block_in_chunk(chunk_coords, local_coords):
 	var chunk_gen = get_node_or_null(serialize_chunk_name(chunk_coords))
@@ -103,15 +107,16 @@ func remove_overlap(a: Array, b: Array):
 				break
 
 func _chunk_entered(x, y, z):
-	# print("sdafsadf")
-	# print([x, y, z])
 	spawn_chunks_around(x, y, z)
 
 func serialize_chunk_name(chunk_location):
 	return "%dx%dy%dz" % [chunk_location[0], chunk_location[1], chunk_location[2]]
 
 func spawn_chunks_around(x, y, z, immediate = false, length = box_length, height = box_height, width = box_width):
+	latest_chunk_coords = [x, y, z]
+	print([x, y, z])
 	var box = box_at(x, y, z, length, height, width)
+
 	remove_overlap(box, get_current_chunk_coordinates())
 	for chunk_location in box:
 		var generator = generator_scene.instance()

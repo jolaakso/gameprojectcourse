@@ -17,6 +17,21 @@ func _ready():
 	velocity = Vector3.ZERO
 	get_node("Head/RayCast").add_exception(self)
 
+func serialize():
+	return {
+		"id": "Character",
+		"x_pos": translation.x,
+		"y_pos": translation.y,
+		"z_pos": translation.z,
+		"y_rot": rotation.y,
+	}
+
+func deserialize(dict: Dictionary):
+	translation.x = dict["x_pos"]
+	translation.y = dict["y_pos"]
+	translation.z = dict["z_pos"]
+	rotation.y = dict["y_rot"]
+
 func _physics_process(delta):
 	var move_dir = get_input().rotated(-rotation.y)
 	if is_on_floor():

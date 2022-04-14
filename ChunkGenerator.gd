@@ -48,4 +48,5 @@ func generate():
 
 func _on_ChunkBoundary_body_entered(body):
 	var chunk_coordinates = get_node("BlockyChunk").chunk_coordinates
+	print(chunk_coordinates)
 	emit_signal("chunk_entered", chunk_coordinates[0], chunk_coordinates[1], chunk_coordinates[2])
