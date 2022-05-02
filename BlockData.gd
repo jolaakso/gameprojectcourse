@@ -12,6 +12,15 @@ var blocks: PoolByteArray
 
 var UNTOUCHED = 255
 
+func is_untouched():
+	for byte in blocks:
+		if byte != UNTOUCHED:
+			return false
+	return true
+
+func serialize():
+	return Marshalls.raw_to_base64(blocks)
+
 func _init(length = 16, width = 16, height = 16, initial_type = 0):
 	self.length = length
 	self.width = width
@@ -88,3 +97,8 @@ func index_to_coords(ix: int) -> Array:
 
 func coords_to_index(x: int, y: int, z: int) -> int:
 	return z * width * length + y * length + x
+
+func set_data(blocks_data: PoolByteArray):
+	if blocks_data.size() == blocks.size():
+		for i in range(blocks_data.size()):
+			blocks.set(i, blocks_data[i])

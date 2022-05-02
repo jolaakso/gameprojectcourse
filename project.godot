@@ -33,13 +33,19 @@ _global_script_classes=[ {
 "class": "NoiseDecider",
 "language": "GDScript",
 "path": "res://NoiseDecider.gd"
+}, {
+"base": "BlockDecider",
+"class": "TwoLayerDecider",
+"language": "GDScript",
+"path": "res://TwoLayerDecider.gd"
 } ]
 _global_script_class_icons={
 "BlockData": "",
 "BlockDecider": "",
 "Cube": "",
 "FlatDecider": "",
-"NoiseDecider": ""
+"NoiseDecider": "",
+"TwoLayerDecider": ""
 }
 
 [application]
@@ -51,6 +57,12 @@ config/icon="res://icon.png"
 [autoload]
 
 GameSave="*res://GameSave.gd"
+RegionLoader="*res://RegionLoader.gd"
+MaterialsList="*res://MaterialsList.gd"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/godot-sqlite/plugin.cfg" )
 
 [input]
 

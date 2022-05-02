@@ -4,8 +4,9 @@ var box_length = 5
 var box_height = 1
 var box_width = 5
 var generator_scene = load("res://ChunkGenerator.tscn")
-var random_noise: OpenSimplexNoise = OpenSimplexNoise.new()
+var random_seed = 0xFACEBEEF
 var chunk_worker: Thread = Thread.new()
+var worker_terminated = false
 var generator_queue: Array = []
 var generator_queue_mutex: Mutex = Mutex.new()
 var latest_chunk_coords = [0, 0, 0]
@@ -21,9 +22,20 @@ class SpiralSorter:
 		var b_dist = Vector3(b[0], b[1], b[2]).distance_squared_to(origin)
 		return a_dist < b_dist
 
-func _process(_delta):
-	if !chunk_worker.is_alive() && !generator_queue.empty():
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		terminate_worker()
+
+func terminate_worker():
+	worker_terminated = true
+
+	if chunk_worker.is_active():
 		chunk_worker.wait_to_finish()
+
+func _process(_delta):
+	if !worker_terminated && !chunk_worker.is_alive() && !generator_queue.empty():
+		if chunk_worker.is_active():
+			chunk_worker.wait_to_finish()
 		chunk_worker = Thread.new()
 		chunk_worker.start(self, "process_generation")
 
@@ -35,12 +47,12 @@ func serialize():
 		"current_chunk_z": latest_chunk_coords[2],
 	}
 
-func place_block_in_chunk(chunk_coords, local_coords):
+func place_block_in_chunk(chunk_coords, local_coords, block_type):
 	var chunk_gen = get_node_or_null(serialize_chunk_name(chunk_coords))
 	if !chunk_gen:
 		return
 	var chunk = chunk_gen.get_chunk()
-	chunk.place_block(1, local_coords)
+	chunk.place_block(block_type, local_coords)
 
 func mine_block_in_chunk(chunk_coords, local_coords):
 	var chunk_gen = get_node_or_null(serialize_chunk_name(chunk_coords))
@@ -71,18 +83,17 @@ func queue_generation(generator):
 
 func process_generation():
 	var generator = null
+
 	generator_queue_mutex.lock()
+
 	if !generator_queue.empty():
 		generator = generator_queue.pop_front()
 	generator_queue_mutex.unlock()
-	if generator != null:
+	if generator != null && is_instance_valid(generator):
 		generator.generate()
-		process_generation()
-
-func set_seed(noise_seed: int):
-	var noise = OpenSimplexNoise.new()
-	noise.seed = noise_seed
-	random_noise = noise
+		var paused = get_tree().paused
+		if !paused:
+			process_generation()
 
 func box_at(x, y, z, length = box_length, height = box_height, width = box_width):
 	var box_indices = []
@@ -108,13 +119,23 @@ func remove_overlap(a: Array, b: Array):
 
 func _chunk_entered(x, y, z):
 	spawn_chunks_around(x, y, z)
+	unload_faraway_chunks(x, y, z)
+	print(get_child_count())
 
 func serialize_chunk_name(chunk_location):
 	return "%dx%dy%dz" % [chunk_location[0], chunk_location[1], chunk_location[2]]
 
+func unload_faraway_chunks(x, y, z,
+						   max_x_dist = box_length/2 + 2,
+						   max_y_dist = box_height/2 + 2,
+						   max_z_dist = box_width/2 + 2):
+	for chunk in get_children():
+		var location: Array = chunk.get_chunk_coordinates()
+		if abs(x - location[0]) > max_x_dist || abs(y - location[1]) > max_y_dist || abs(z - location[2]) > max_z_dist:
+			chunk.unload()
+
 func spawn_chunks_around(x, y, z, immediate = false, length = box_length, height = box_height, width = box_width):
 	latest_chunk_coords = [x, y, z]
-	print([x, y, z])
 	var box = box_at(x, y, z, length, height, width)
 
 	remove_overlap(box, get_current_chunk_coordinates())
@@ -127,10 +148,10 @@ func spawn_chunks_around(x, y, z, immediate = false, length = box_length, height
 		var world_y = chunk_location[1] * chunk_dimensions[1]
 		var world_z = chunk_location[2] * chunk_dimensions[2]
 
-		var decider = NoiseDecider.new(world_x, world_y, world_z, random_noise)
+		var decider = TwoLayerDecider.new(world_x, world_y, world_z, random_seed)
 		generator.set_block_decider(decider)
 		generator.connect("chunk_entered", self, "_chunk_entered")
-		generator.set_name(serialize_chunk_name(chunk_location))
+		generator.set_name(generator.serialize_coords())
 
 		generator.translation.x = world_x
 		generator.translation.y = world_y

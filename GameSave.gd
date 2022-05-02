@@ -13,3 +13,8 @@ func load_save():
 	var save_file_text = save_file.get_as_text()
 	saved_data = JSON.parse(save_file_text).result
 	save_file.close()
+
+func delete_save():
+	saved_data = null
+	var dir = Directory.new()
+	dir.remove(save_file_path)

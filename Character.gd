@@ -9,7 +9,12 @@ var acceleration: Vector3
 var friction: float = 3.0
 var velocity: Vector3
 
-signal place_block(chunk_coords, local_coords)
+var max_velocity_ground = 50.0
+var max_velocity_air = 100.0
+
+var last_safe_location = Vector3.ZERO
+
+signal place_block(chunk_coords, local_coords, block_type)
 signal mine_block(chunk_coords, local_coords)
 
 func _ready():
@@ -31,6 +36,14 @@ func deserialize(dict: Dictionary):
 	translation.y = dict["y_pos"]
 	translation.z = dict["z_pos"]
 	rotation.y = dict["y_rot"]
+	
+	last_safe_location = translation
+
+func teleport_to_last_safe():
+	translation = last_safe_location
+
+func save_last_safe():
+	last_safe_location = translation
 
 func _physics_process(delta):
 	var move_dir = get_input().rotated(-rotation.y)
@@ -65,6 +78,14 @@ func movement_acceleration(delta, dir: Vector2) -> Vector3:
 	var acceleration_length = acceleration_press * delta
 	var projected_velocity = move_global.dot(velocity)
 	
+	var max_velocity = max_velocity_air
+	
+	if is_on_floor():
+		max_velocity = max_velocity_ground
+	
+	if acceleration_length + projected_velocity > max_velocity:
+		acceleration_length = max_velocity - projected_velocity
+	
 	return velocity + move_global * acceleration_length
 
 func jump():
@@ -96,6 +117,10 @@ func get_input():
 func rotate_character(rotations):
 	rotate_y(rotations / (2 * PI))
 
+func push_away_from(global_point):
+	var current_velocity = velocity
+	velocity = Vector3(-current_velocity.x, -3 * current_velocity.y, -current_velocity.z)
+
 func tilt_head(tilt_rotations):
 	var head = get_node("Head")
 	var current_rotation = head.rotation.x
@@ -110,9 +135,10 @@ func place_block():
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
 		if collider.has_method("get_chunk_coords_adjacent"):
+			var block_type = 4
 			var chunk_and_coord = collider.get_chunk_coords_adjacent(raycast.get_collision_point(),
 																	 raycast.get_collision_normal())
-			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords)
+			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords, block_type)
 
 func mine_block():
 	var raycast = get_node("Head/RayCast")

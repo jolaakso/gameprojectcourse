@@ -6,6 +6,7 @@ func _ready():
 	var init_chunk_z = 0
 	var character_data
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	RegionLoader.open_region()
 	if GameSave.saved_data:
 		for obj in GameSave.saved_data:
 			if obj["id"] == "Chunks":
@@ -50,6 +51,8 @@ func serialized_state():
 func save_game(save_file: File):
 	var state_json = serialized_state()
 	save_file.store_line(state_json)
+	for chunk in get_node("RollingChunks").get_children():
+		chunk.save_chunk()
 
 func _on_PauseMenu_game_saved():
 	var save_file = File.new()
@@ -58,9 +61,8 @@ func _on_PauseMenu_game_saved():
 	save_file.close()
 	get_node("PauseMenu").confirm_game_saved()
 
-func _on_Character_place_block(chunk_coords, local_coords):
-	get_node("RollingChunks").place_block_in_chunk(chunk_coords, local_coords)
-
+func _on_Character_place_block(chunk_coords, local_coords, block_type):
+	get_node("RollingChunks").place_block_in_chunk(chunk_coords, local_coords, block_type)
 
 func _on_Character_mine_block(chunk_coords, local_coords):
 	get_node("RollingChunks").mine_block_in_chunk(chunk_coords, local_coords)

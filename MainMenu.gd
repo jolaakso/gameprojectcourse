@@ -19,7 +19,8 @@ func _on_QuitConfirmation_confirmed():
 	get_tree().notification(MainLoop.NOTIFICATION_WM_QUIT_REQUEST)
 
 func _on_StartButton_pressed():
-	GameSave.saved_data = null
+	GameSave.delete_save()
+	RegionLoader.delete_db()
 	return get_tree().change_scene("res://World.tscn")
 
 func _on_LoadButton_pressed():

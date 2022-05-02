@@ -26,3 +26,16 @@ var LEFT_NORMALS =  [Vector3.LEFT, Vector3.LEFT, Vector3.LEFT,
 					 Vector3.LEFT, Vector3.LEFT, Vector3.LEFT]
 var RIGHT_NORMALS = [Vector3.RIGHT, Vector3.RIGHT, Vector3.RIGHT,
 					 Vector3.RIGHT, Vector3.RIGHT, Vector3.RIGHT]
+
+var FRONT_UVS = [Vector2(0, 0.33), Vector2(0, 0.66), Vector2(0.25, 0.66),
+				 Vector2(0.25, 0.33), Vector2(0, 0.33), Vector2(0.25, 0.66)]
+var BACK_UVS = [Vector2(0.5, 0.66), Vector2(0.75, 0.66), Vector2(0.75, 0.33),
+				Vector2(0.5, 0.66), Vector2(0.75, 0.33), Vector2(0.5, 0.33)]
+var DOWN_UVS = [Vector2(0.25, 0.66), Vector2(0.5, 0.66), Vector2(0.5, 0.33),
+				Vector2(0.25, 0.66), Vector2(0.5, 0.33), Vector2(0.25, 0.33)]
+var UP_UVS = [Vector2(0.75, 0.33), Vector2(0.75, 0.66), Vector2(1, 0.66),
+			  Vector2(1, 0.33), Vector2(0.75, 0.33), Vector2(1, 0.66)]
+var LEFT_UVS = [Vector2(0.25, 0.66), Vector2(0.25, 1), Vector2(0.5, 1),
+				Vector2(0.25, 0.66), Vector2(0.5, 1), Vector2(0.5, 0.66)]
+var RIGHT_UVS = [Vector2(0.5, 0), Vector2(0.25, 0), Vector2(0.25, 0.33),
+				 Vector2(0.5, 0.33), Vector2(0.5, 0), Vector2(0.25, 0.33)]

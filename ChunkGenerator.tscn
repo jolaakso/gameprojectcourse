@@ -15,7 +15,6 @@ script = ExtResource( 1 )
 collision_layer = 0
 collision_mask = 2
 input_ray_pickable = false
-monitoring = false
 monitorable = false
 
 [node name="CollisionCube" type="CollisionShape" parent="ChunkBoundary"]

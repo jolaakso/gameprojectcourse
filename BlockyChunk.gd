@@ -5,6 +5,8 @@ var length = 16
 var width = 16
 var height = 16
 
+# Whether this chunk has been edited since loading
+var dirty = false
 var blocks: BlockData
 var blocks_diff: BlockData
 
@@ -13,13 +15,11 @@ var chunk_coordinates
 func _ready():
 	blocks = BlockData.new(length, width, height)
 	blocks_diff = BlockData.new(length, width, height, 255)
-	refresh_blocks()
 
 func is_empty(x, y, z):
 	return blocks.at_coords(x, y, z) == 0
 
 func get_chunk_coords_pointed(global_loc, normal):
-	print(global_loc)
 	var local_coords = to_local(global_loc).floor()
 	# Global_loc comes from raycasting, there is a problem when normal is in
 	# the positive half space, flooring the local coords gives *the adjacent*
@@ -70,18 +70,24 @@ func set_block(block_type, coords: Array):
 	blocks.set_block_to(block_type, coords)
 
 func change_block(block_type, coords: Array):
+	dirty = true
 	blocks.set_block_to(block_type, coords)
 	blocks_diff.set_block_to(block_type, coords)
 
 func apply_diff():
 	blocks.merge(blocks_diff)
 
+func set_diff(diff: PoolByteArray):
+	blocks_diff.set_data(diff)
+
 func refresh_blocks():
 	var blocks_mesher = get_node("BlocksMesher")
 	blocks_mesher.refresh_mesh(blocks)
 	var mesh = blocks_mesher.mesh
+	var timestart = OS.get_ticks_msec()
 	if mesh:
 		get_node("ChunkCollision").shape = mesh.create_trimesh_shape()
+	print_debug("time: ", OS.get_ticks_msec() - timestart)
 
 func coords_to_index(coords: Array) -> int:
 	var x = coords[0]
