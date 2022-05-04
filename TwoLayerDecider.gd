@@ -13,6 +13,9 @@ func _init(offset_x: int = 0, offset_y: int = 0, offset_z: int = 0, the_seed: in
 	self.soil_generator = OpenSimplexNoise.new()
 	soil_generator.seed = the_seed
 	self.rock_generator = OpenSimplexNoise.new()
+	rock_generator.period = 16.0
+	rock_generator.octaves = 5
+	rock_generator.persistence = 0.1
 	rock_generator.seed = -the_seed
 	self.offset_x = offset_x
 	self.offset_y = offset_y
@@ -33,8 +36,8 @@ func sample_noise(x, z):
 
 func get_block_type(x, y, z):
 	var samples = sample_noise(x, z)
-	var soil_height = samples.soil_sample * 2
-	var rock_height = samples.rock_sample * 2 - 5
+	var soil_height = samples.soil_sample * 7
+	var rock_height = samples.rock_sample * 30 - 5
 	if y + offset_y <= rock_height:
 		return 1
 	elif y + offset_y <= soil_height:

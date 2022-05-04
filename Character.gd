@@ -8,11 +8,14 @@ var acceleration_press: float = 10
 var acceleration: Vector3
 var friction: float = 3.0
 var velocity: Vector3
+var snap = Vector3.DOWN
 
 var max_velocity_ground = 50.0
-var max_velocity_air = 100.0
+var max_velocity_air = 75.0
 
 var last_safe_location = Vector3.ZERO
+
+var selected_block_type = 4
 
 signal place_block(chunk_coords, local_coords, block_type)
 signal mine_block(chunk_coords, local_coords)
@@ -21,6 +24,7 @@ func _ready():
 	acceleration = Vector3.ZERO
 	velocity = Vector3.ZERO
 	get_node("Head/RayCast").add_exception(self)
+	get_node("Head/SelectedBlock").material_override = MaterialsList.get_matching_material(selected_block_type)
 
 func serialize():
 	return {
@@ -46,14 +50,20 @@ func save_last_safe():
 	last_safe_location = translation
 
 func _physics_process(delta):
+	if is_on_floor() && snap == Vector3.ZERO:
+		snap = Vector3.DOWN
+		
 	var move_dir = get_input().rotated(-rotation.y)
 	if is_on_floor():
 		velocity = velocity_after_friction(delta)
+	elif is_on_wall(): 
+		velocity = velocity_after_friction(delta)
+		velocity += gravity * delta
 	else:
 		velocity += gravity * delta
 	# apply friction
 	velocity = movement_acceleration(delta, move_dir)
-	move_and_slide(velocity, Vector3.UP, true)
+	move_and_slide_with_snap(velocity, snap, Vector3.UP)
 
 func velocity_after_friction(delta):
 	return velocity * max(1 - friction * delta, 0)
@@ -82,7 +92,6 @@ func movement_acceleration(delta, dir: Vector2) -> Vector3:
 	
 	if is_on_floor():
 		max_velocity = max_velocity_ground
-	
 	if acceleration_length + projected_velocity > max_velocity:
 		acceleration_length = max_velocity - projected_velocity
 	
@@ -90,10 +99,33 @@ func movement_acceleration(delta, dir: Vector2) -> Vector3:
 
 func jump():
 	if is_on_floor():
+		snap = Vector3.ZERO
 		velocity += Vector3(0, 7, 0)
 
+func switch_camera():
+	var first_person = get_node("Head/Camera")
+	var third_person = get_node("Head/ThirdPersonCamera")
+	if first_person.current:
+		first_person.current = false
+		third_person.current = true
+	else:
+		first_person.current = true
+		third_person.current = false
+
+func play_walk_animation():
+	var animation = get_node("DuckWhite/Skeleton/AnimationPlayer").play("ArmatureAction")
+
+func reset_walk_animation():
+	var animation = get_node("DuckWhite/Skeleton/AnimationPlayer").play("RESET")
+
+func stop_walk_animation():
+	var animation = get_node("DuckWhite/Skeleton/AnimationPlayer").stop()
+	
 func get_input():
 	var move_direction = Vector2.ZERO
+	
+	if Input.is_action_just_pressed("switch_camera"):
+		switch_camera()
 	
 	if Input.is_action_just_pressed("place_block"):
 		place_block()
@@ -103,14 +135,27 @@ func get_input():
 	if Input.is_action_just_pressed("jump"):
 		jump()
 	
+	var is_moving = false
+	
 	if Input.is_action_pressed("move_forward"):
+		is_moving = true
 		move_direction += Vector2.UP
 	if Input.is_action_pressed("move_backward"):
+		is_moving = true
 		move_direction += Vector2.DOWN
 	if Input.is_action_pressed("move_right"):
+		is_moving = true
 		move_direction += Vector2.RIGHT
 	if Input.is_action_pressed("move_left"):
+		is_moving = true
 		move_direction += Vector2.LEFT
+	
+	if is_moving && is_on_floor():
+		play_walk_animation()
+	elif !is_on_floor():
+		stop_walk_animation()
+	else:
+		reset_walk_animation()
 	
 	return move_direction
 
@@ -135,10 +180,9 @@ func place_block():
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
 		if collider.has_method("get_chunk_coords_adjacent"):
-			var block_type = 4
 			var chunk_and_coord = collider.get_chunk_coords_adjacent(raycast.get_collision_point(),
 																	 raycast.get_collision_normal())
-			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords, block_type)
+			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords, selected_block_type)
 
 func mine_block():
 	var raycast = get_node("Head/RayCast")

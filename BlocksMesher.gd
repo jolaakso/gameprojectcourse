@@ -1,9 +1,10 @@
 extends MeshInstance
 
-func refresh_mesh(blocks: BlockData) -> void:
+func refresh_mesh(blocks: BlockData) -> PoolVector3Array:
 	var block_dict = mesh_blocks(blocks)
 	var array_mesh = ArrayMesh.new()
 	var block_types = block_dict.keys()
+	var vertices = PoolVector3Array()
 
 	for block_type in block_types:
 		var block_vertices = PoolVector3Array(block_dict[block_type].vertices)
@@ -11,7 +12,9 @@ func refresh_mesh(blocks: BlockData) -> void:
 		var block_uvs = PoolVector2Array(block_dict[block_type].uvs)
 	
 		if block_vertices.size() == 0:
-			return
+			continue
+
+		vertices.append_array(block_vertices)
 
 		var mesh_data = []
 		mesh_data.resize(array_mesh.ARRAY_MAX)
@@ -20,12 +23,11 @@ func refresh_mesh(blocks: BlockData) -> void:
 		mesh_data[array_mesh.ARRAY_TEX_UV] = block_uvs
 	
 		array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_data)
-	var materials = MaterialsList.materials
-	var materials_amount = materials.size()
 	for i in range(block_types.size()):
-		array_mesh.surface_set_material(i, materials[(block_types[i] - 1) % materials_amount])
+		array_mesh.surface_set_material(i, MaterialsList.get_matching_material(block_types[i]))
 
 	mesh = array_mesh
+	return vertices
 
 func mesh_blocks(blocks: BlockData) -> Dictionary:
 	var mesh_by_types = {}
@@ -62,32 +64,32 @@ func mesh_single_block(blocks, x, y, z) -> Dictionary:
 	var cube_normals = []
 	var cube_uvs = []
 	
-	if z == blocks.width - 1 || this_block_type != blocks.at_coords(x, y, z+1):
+	if z == blocks.width - 1 || blocks.at_coords(x, y, z+1) == 0:
 		cube_verts.append_array(cube_model.BACK_FACE)
 		cube_normals.append_array(cube_model.BACK_NORMALS)
 		cube_uvs.append_array(cube_model.BACK_UVS)
 
-	if z == 0 || this_block_type != blocks.at_coords(x, y, z-1):
+	if z == 0 || blocks.at_coords(x, y, z-1) == 0:
 		cube_verts.append_array(cube_model.FRONT_FACE)
 		cube_normals.append_array(cube_model.FRONT_NORMALS)
 		cube_uvs.append_array(cube_model.FRONT_UVS)
 	
-	if y == blocks.height - 1 || this_block_type != blocks.at_coords(x, y+1, z):
+	if y == blocks.height - 1 || blocks.at_coords(x, y+1, z) == 0:
 		cube_verts.append_array(cube_model.UP_FACE)
 		cube_normals.append_array(cube_model.UP_NORMALS)
 		cube_uvs.append_array(cube_model.UP_UVS)
 
-	if y == 0 || this_block_type != blocks.at_coords(x, y-1, z):
+	if y == 0 || blocks.at_coords(x, y-1, z) == 0:
 		cube_verts.append_array(cube_model.DOWN_FACE)
 		cube_normals.append_array(cube_model.DOWN_NORMALS)
 		cube_uvs.append_array(cube_model.DOWN_UVS)
 
-	if x == blocks.length - 1 || this_block_type != blocks.at_coords(x+1, y, z):
+	if x == blocks.length - 1 || blocks.at_coords(x+1, y, z) == 0:
 		cube_verts.append_array(cube_model.RIGHT_FACE)
 		cube_normals.append_array(cube_model.RIGHT_NORMALS)
 		cube_uvs.append_array(cube_model.RIGHT_UVS)
 
-	if x == 0 || this_block_type != blocks.at_coords(x-1, y, z):
+	if x == 0 || blocks.at_coords(x-1, y, z) == 0:
 		cube_verts.append_array(cube_model.LEFT_FACE)
 		cube_normals.append_array(cube_model.LEFT_NORMALS)
 		cube_uvs.append_array(cube_model.LEFT_UVS)

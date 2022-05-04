@@ -82,12 +82,12 @@ func set_diff(diff: PoolByteArray):
 
 func refresh_blocks():
 	var blocks_mesher = get_node("BlocksMesher")
-	blocks_mesher.refresh_mesh(blocks)
+	var vertices = blocks_mesher.refresh_mesh(blocks)
 	var mesh = blocks_mesher.mesh
-	var timestart = OS.get_ticks_msec()
-	if mesh:
-		get_node("ChunkCollision").shape = mesh.create_trimesh_shape()
-	print_debug("time: ", OS.get_ticks_msec() - timestart)
+	if mesh && vertices && vertices.size() > 0:
+		var concave_shape = ConcavePolygonShape.new()
+		concave_shape.set_faces(vertices)
+		get_node("ChunkCollision").shape = concave_shape
 
 func coords_to_index(coords: Array) -> int:
 	var x = coords[0]
