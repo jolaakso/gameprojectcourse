@@ -12,6 +12,9 @@ var blocks_diff: BlockData
 
 var chunk_coordinates
 
+signal block_placed()
+signal block_removed()
+
 func _ready():
 	blocks = BlockData.new(length, width, height)
 	blocks_diff = BlockData.new(length, width, height, 255)
@@ -60,7 +63,6 @@ func place_block(block_type, coords: Array):
 	refresh_blocks()
 
 func remove_block(coords: Array):
-	print(coords)
 	if is_empty(coords[0], coords[1], coords[2]):
 		return
 	change_block(0, coords)

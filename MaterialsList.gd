@@ -4,6 +4,7 @@ var materials = [
 	preload("res://materials/gray.material"),
 	preload("res://materials/soil.material"),
 	preload("res://materials/grass_shader.material"),
+	preload("res://materials/gold.material"),
 ]
 
 func get_matching_material(block_type):

@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/plop.mp3-ac827a1e5eca2699867ae3c9ede3ec38.mp3str"
+
+[deps]
+
+source_file="res://sounds/plop.mp3"
+dest_files=[ "res://.import/plop.mp3-ac827a1e5eca2699867ae3c9ede3ec38.mp3str" ]
+
+[params]
+
+loop=false
+loop_offset=0

@@ -47,6 +47,18 @@ text = "Exit Game"
 
 [node name="QuitConfirmation" parent="." instance=ExtResource( 2 )]
 
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 17.0
+margin_top = 21.0
+margin_right = 296.0
+margin_bottom = 173.0
+text = "WASD: Move
+Mouse move: Look
+Left click: Place block
+Right click: Remove block
+C: Change 1st/3rd person camera
+1, 2, 3, 4: Change block type"
+
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_StartButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/LoadButton" to="." method="_on_LoadButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]

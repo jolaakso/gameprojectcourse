@@ -15,7 +15,7 @@ var max_velocity_air = 75.0
 
 var last_safe_location = Vector3.ZERO
 
-var selected_block_type = 4
+var selected_block_type = 1
 
 signal place_block(chunk_coords, local_coords, block_type)
 signal mine_block(chunk_coords, local_coords)
@@ -101,16 +101,20 @@ func jump():
 	if is_on_floor():
 		snap = Vector3.ZERO
 		velocity += Vector3(0, 7, 0)
+		play_jump_sound()
 
 func switch_camera():
 	var first_person = get_node("Head/Camera")
 	var third_person = get_node("Head/ThirdPersonCamera")
+	var block = get_node("Head/SelectedBlock")
 	if first_person.current:
 		first_person.current = false
 		third_person.current = true
+		block.place_in_hand()
 	else:
 		first_person.current = true
 		third_person.current = false
+		block.place_next_to_head()
 
 func play_walk_animation():
 	var animation = get_node("DuckWhite/Skeleton/AnimationPlayer").play("ArmatureAction")
@@ -120,7 +124,33 @@ func reset_walk_animation():
 
 func stop_walk_animation():
 	var animation = get_node("DuckWhite/Skeleton/AnimationPlayer").stop()
-	
+
+func play_walk_sound():
+	var walk_sound = get_node("WalkSound")
+	if !walk_sound.playing:
+		walk_sound.play()
+
+func stop_walk_sound():
+	var walk_sound = get_node("WalkSound")
+	if walk_sound.playing:
+		walk_sound.stop()
+
+func play_jump_sound():
+	var jump_sound = get_node("JumpSound")
+	jump_sound.play(0.0)
+
+func play_plop_sound():
+	var plop_sound = get_node("PlopSound")
+	plop_sound.play(0.0)
+
+func play_remove_sound():
+	var remove_sound = get_node("RemoveSound")
+	remove_sound.play(0.0)
+
+func select_block(block_type):
+	selected_block_type = block_type
+	get_node("Head/SelectedBlock").material_override = MaterialsList.get_matching_material(selected_block_type)
+
 func get_input():
 	var move_direction = Vector2.ZERO
 	
@@ -152,11 +182,22 @@ func get_input():
 	
 	if is_moving && is_on_floor():
 		play_walk_animation()
+		play_walk_sound()
 	elif !is_on_floor():
 		stop_walk_animation()
+		stop_walk_sound()
 	else:
 		reset_walk_animation()
+		stop_walk_sound()
 	
+	if Input.is_action_just_pressed("block_1"):
+		select_block(1)
+	elif Input.is_action_just_pressed("block_2"):
+		select_block(2)
+	elif Input.is_action_just_pressed("block_3"):
+		select_block(3)
+	elif Input.is_action_just_pressed("block_4"):
+		select_block(4)
 	return move_direction
 
 func rotate_character(rotations):
@@ -183,6 +224,7 @@ func place_block():
 			var chunk_and_coord = collider.get_chunk_coords_adjacent(raycast.get_collision_point(),
 																	 raycast.get_collision_normal())
 			emit_signal("place_block", chunk_and_coord.chunk, chunk_and_coord.local_coords, selected_block_type)
+			play_plop_sound()
 
 func mine_block():
 	var raycast = get_node("Head/RayCast")
@@ -194,6 +236,7 @@ func mine_block():
 			var chunk_and_coord = collider.get_chunk_coords_pointed(raycast.get_collision_point(),
 																	 raycast.get_collision_normal())
 			collider.remove_block(chunk_and_coord.local_coords)
+			play_remove_sound()
 
 func _unhandled_input(event):
 	if event is InputEventMouseMotion && Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
