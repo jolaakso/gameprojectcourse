@@ -1,12 +1,322 @@
 \documentclass{article}
 \usepackage[english]{babel}
 
-\begin{document}
-\begin{center}
-    \begin{tabular}{| l | l | l | l |}
-	\hline
 
-	\hline
-\end{tabular}
-\end{center}
+\begin{document}
+The below hours log is based on bookkeeping that was originally written on pen and paper. It only includes time spent on the game itself, so the hours spent on any reports or this hours log itself are not included. Those other tasks not taken into account in this hours log probably total something between 3 to 7 hours.\\\\
+15.03.2022
+\begin{itemize}
+	\item 1 Hour
+	\begin{itemize}
+		\item Godot 3.4 installation
+		\item Creating the project
+		\item Main menu
+		\begin{itemize}
+			\item Working ``Quit game" button
+			\item Testing the button with ``Print"
+		\end{itemize}
+	\item Watching a ``Godot main menu tutorial" video
+	\end{itemize}
+\end{itemize}
+
+16.03.2022
+\begin{itemize}
+	\item 1 and a half hours
+	\begin{itemize}
+		\item Pause menu
+		\item Watching tutorial videos
+		\item Game can be paused
+		\item You can resume the game from pause menu
+		\item Test scene with a moving 3d model
+	\end{itemize}
+\end{itemize}
+
+17.03.2022
+\begin{itemize}
+	\item 1 Hour
+	\begin{itemize}
+		\item saving the game (just saves the position of the moving 3d model)
+		\item Feedback for the user that the save was successful via a popup
+	\end{itemize}
+\end{itemize}
+
+18.03.2022
+\begin{itemize}
+	\item 40 min
+	\begin{itemize}
+		\item Changing the save game popup to its own menu view
+	\end{itemize}
+\end{itemize}
+
+20.03.2022
+\begin{itemize}
+	\item 50 minutes
+	\begin{itemize}
+		\item Loading the game (just loads the position of the 3d shape)
+	\end{itemize}
+\end{itemize}
+
+21.03.2022
+\begin{itemize}
+	\item $>$ 1 hour 15 min
+	\begin{itemize}
+		\item A simple ``Minecraft" looking area of blocks
+		\begin{itemize}
+			\item inefficient, own mesh per block
+		\end{itemize}
+	\item Improving the ``load game" button so its not shown if no saved game present
+	\end{itemize}
+\end{itemize}
+
+24.03.2022
+\begin{itemize}
+	\item $\sim$ 1 Hour
+	\begin{itemize}
+		\item ``Chunk"-generator that creates an uniform chunk that has a specified height
+	\end{itemize}
+\end{itemize}
+
+25.03.2022
+\begin{itemize}
+	\item 35 minutes
+	\begin{itemize}
+		\item Fixing a bug with the chunk generator
+	\end{itemize}
+\end{itemize}
+
+26.03.2022
+\begin{itemize}
+	\item 2 hours 15 minutes
+	\begin{itemize}
+		\item Chunk is a single mesh
+	\end{itemize}
+\end{itemize}
+
+01.04.2022
+\begin{itemize}
+	\item 1 hour 15 minutes
+	\begin{itemize}
+		\item Randomized chunk generator
+	\end{itemize}
+    \item 1 hour 30 minutes
+    \begin{itemize}
+    	\item fixing a graphical bug with the chunk where some faces of the cubes could not be seen
+    \end{itemize}
+\end{itemize}
+
+02.04.2022
+\begin{itemize}
+	\item 2 hours 35 minutes
+	\begin{itemize}
+		\item Character controller
+		\item Physical terrain
+	\end{itemize}
+\item $\sim$ 2 hours
+\begin{itemize}
+	\item fixing physics bugs
+	\item fixing bugs with terrain
+	\item fixing some graphical bugs
+\end{itemize}
+\end{itemize}
+
+09.04.2022
+\begin{itemize}
+	\item 1 hour 20 min
+	\begin{itemize}
+		\item Placing blocks in terrain
+	\end{itemize}
+\end{itemize}
+
+10.04.2022
+\begin{itemize}
+	\item 1 hour 20 min
+	\begin{itemize}
+		\item Terrain generator
+	\end{itemize}
+\item $\sim$ 2 hours
+\begin{itemize}
+	\item Chunk generation in its own thread
+\end{itemize}
+\end{itemize}
+
+11.04.2022
+\begin{itemize}
+	\item 1 hour 30 min
+	\begin{itemize}
+		\item Trying to fix movement jitter
+		\item trying to make the terrain generation faster
+		\item Jumping
+		\item Skybox
+	\end{itemize}
+\item 40 min
+\begin{itemize}
+	\item Optimization: do not double generate chunks
+\end{itemize}
+\item $\sim$ 1 hour 30 min
+\begin{itemize}
+	\item Infinite terrain generation
+\end{itemize}
+\end{itemize}
+
+12.04.2022
+\begin{itemize}
+	\item $\sim$ 4 hours
+	\begin{itemize}
+		\item a preview block that shows where a new block would be placed
+	\end{itemize}
+\item $\sim$ 1 hour
+\begin{itemize}
+	\item fixing a bug with placing blocks to the field
+\end{itemize}
+\end{itemize}
+
+13.04.2022
+\begin{itemize}
+	\item 30 mins in morning and 30 mins in the night (about 1 hour total)
+	\begin{itemize}
+		\item jitter bug fixed
+		\item deleting blocks from terrain
+	\end{itemize}
+\end{itemize}
+
+14.04.2022
+\begin{itemize}
+	\item 40 minutes
+	\begin{itemize}
+		\item Saving the location of the character
+	\end{itemize}
+\end{itemize}
+
+22.04.2022
+\begin{itemize}
+	\item $\sim$ 40 min
+	\begin{itemize}
+		\item Try to fix a bug where character sometimes falls though terrain
+	\end{itemize}
+\item $\sim$ 30 mins
+\begin{itemize}
+	\item try to kick player upwards if they fall through terrain
+\end{itemize}
+\end{itemize}
+
+23.04.2022
+\begin{itemize}
+	\item 1 Hour
+	\begin{itemize}
+		\item Fixing a bug with the back to main menu button
+	\end{itemize}
+\item 30 min
+\begin{itemize}
+	\item Unloading faraway Chunks
+\end{itemize}
+\item 30 min
+\begin{itemize}
+	\item base work for saving the terrain edits
+\end{itemize}
+\item 2 hours 10 minutes
+\begin{itemize}
+	\item Saving the terrain works
+\end{itemize}
+\end{itemize}
+
+25.04.2022
+\begin{itemize}
+	\item $\sim$ 10 minutes
+	\begin{itemize}
+		\item better movement physics
+		\item Save only dirty (edited) chunks
+	\end{itemize}
+\end{itemize}
+
+26.04.2022
+\begin{itemize}
+	\item $\sim$ 15 minutes
+	\begin{itemize}
+		\item System to teleport to a known safe location if they try to go to a not yet loaded chunk
+	\end{itemize}
+\end{itemize}
+
+29.04.2022
+\begin{itemize}
+	\item $\sim$ 1 hour
+	\begin{itemize}
+		\item Textures for blocks
+	\end{itemize}
+\item $\sim$ 1 hour 20 minutes
+\begin{itemize}
+	\item research on what is the best way to support different textures for different types of blocks in the same chunk
+\end{itemize}
+\end{itemize}
+
+01.05.2022
+\begin{itemize}
+	\item $\sim$ 1 Hour 5 min
+	\begin{itemize}
+		\item support for different texture blocks
+	\end{itemize}
+\item $\sim$ 40 min
+\begin{itemize}
+	\item Procedurally generating different types of blocks into the terrain
+\end{itemize}
+\end{itemize}
+
+02.05.2022
+\begin{itemize}
+	\item $\sim$ 30 minutes
+	\begin{itemize}
+		\item significantly faster chunk generation
+	\end{itemize}
+	\item $\sim$ 30 minutes
+	\begin{itemize}
+		\item ``realistic" textures
+		\item Researching on shaders
+	\end{itemize}
+\end{itemize}
+
+03.05.2022
+\begin{itemize}
+	\item $\sim$ 30 minutes
+	\begin{itemize}
+		\item Better terrain
+		\item Better movement physics
+	\end{itemize}
+\item $\sim$ 1 hour 1 minutes
+\begin{itemize}
+	\item Editing a duck model with Blender (rigging and modifying the mesh)
+	\item importing a mesh to godot
+\end{itemize}
+\end{itemize}
+
+04.05.2022
+\begin{itemize}
+	\item $\sim$ 1 hour 10 min
+	\begin{itemize}
+		\item Animations for the duck model
+	\end{itemize}
+\item $\sim$ 30 min
+\begin{itemize}
+	\item Enabling the player to change the block type to be placed
+\end{itemize}
+\item $\sim$ 15 min
+\begin{itemize}
+	\item changing between the third and first person perspectives
+\end{itemize}
+\end{itemize}
+
+05.05.2022
+\begin{itemize}
+	\item $\sim$ 1 hour
+	\begin{itemize}
+		\item Sound effects
+	\end{itemize}
+\end{itemize}
+
+14.05.2022
+\begin{itemize}
+	\item $\sim$ 40 minutes
+	\begin{itemize}
+		\item improving the main menu
+		\item improving the organization of the project folders
+	\end{itemize}
+\end{itemize}
 \end{document}
