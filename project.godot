@@ -12,32 +12,32 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "BlockData",
 "language": "GDScript",
-"path": "res://BlockData.gd"
+"path": "res://scripts/BlockData.gd"
 }, {
 "base": "Reference",
 "class": "BlockDecider",
 "language": "GDScript",
-"path": "res://BlockDecider.gd"
+"path": "res://scripts/BlockDecider.gd"
 }, {
 "base": "Reference",
 "class": "Cube",
 "language": "GDScript",
-"path": "res://Cube.gd"
+"path": "res://scripts/Cube.gd"
 }, {
 "base": "BlockDecider",
 "class": "FlatDecider",
 "language": "GDScript",
-"path": "res://FlatDecider.gd"
+"path": "res://scripts/FlatDecider.gd"
 }, {
-"base": "BlockDecider",
+"base": "Reference",
 "class": "NoiseDecider",
 "language": "GDScript",
-"path": "res://NoiseDecider.gd"
+"path": "res://scripts/NoiseDecider.gd"
 }, {
-"base": "BlockDecider",
+"base": "Reference",
 "class": "TwoLayerDecider",
 "language": "GDScript",
-"path": "res://TwoLayerDecider.gd"
+"path": "res://scripts/TwoLayerDecider.gd"
 } ]
 _global_script_class_icons={
 "BlockData": "",
@@ -56,9 +56,9 @@ config/icon="res://icon.png"
 
 [autoload]
 
-GameSave="*res://GameSave.gd"
-RegionLoader="*res://RegionLoader.gd"
-MaterialsList="*res://MaterialsList.gd"
+GameSave="*res://scripts/GameSave.gd"
+RegionLoader="*res://scripts/RegionLoader.gd"
+MaterialsList="*res://scripts/MaterialsList.gd"
 
 [editor_plugins]
 

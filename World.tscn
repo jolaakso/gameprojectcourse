@@ -1,8 +1,8 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://TestBlocky.gd" type="Script" id=1]
+[ext_resource path="res://scripts/TestBlocky.gd" type="Script" id=1]
 [ext_resource path="res://PauseMenu.tscn" type="PackedScene" id=2]
-[ext_resource path="res://GameEnvironment.gd" type="Script" id=3]
+[ext_resource path="res://scripts/GameEnvironment.gd" type="Script" id=3]
 [ext_resource path="res://Character.tscn" type="PackedScene" id=5]
 [ext_resource path="res://RollingChunks.tscn" type="PackedScene" id=6]
 
@@ -20,9 +20,9 @@ background_energy = 0.71
 ambient_light_color = Color( 1, 0.92549, 0.92549, 1 )
 fog_enabled = true
 fog_sun_amount = 0.06
-fog_depth_begin = 3.0
-fog_depth_end = 15.0
-fog_depth_curve = 1.27456
+fog_depth_begin = 7.0
+fog_depth_end = 18.0
+fog_depth_curve = 1.51572
 
 [sub_resource type="CylinderMesh" id=1]
 

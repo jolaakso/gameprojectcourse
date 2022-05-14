@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Character.gd" type="Script" id=1]
+[ext_resource path="res://scripts/Character.gd" type="Script" id=1]
 [ext_resource path="res://models/DuckWhite.tscn" type="PackedScene" id=2]
-[ext_resource path="res://SelectedBlock.gd" type="Script" id=3]
+[ext_resource path="res://scripts/SelectedBlock.gd" type="Script" id=3]
 [ext_resource path="res://sounds/walk.mp3" type="AudioStream" id=4]
 [ext_resource path="res://sounds/huh.mp3" type="AudioStream" id=5]
 [ext_resource path="res://sounds/trash.mp3" type="AudioStream" id=6]

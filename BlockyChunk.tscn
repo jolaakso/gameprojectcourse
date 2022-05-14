@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://BlockyChunk.gd" type="Script" id=1]
-[ext_resource path="res://BlocksMesher.gd" type="Script" id=2]
+[ext_resource path="res://scripts/BlockyChunk.gd" type="Script" id=1]
+[ext_resource path="res://scripts/BlocksMesher.gd" type="Script" id=2]
 
 [node name="BlockyChunk" type="StaticBody"]
 script = ExtResource( 1 )
