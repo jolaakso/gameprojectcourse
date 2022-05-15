@@ -50,3 +50,21 @@ func ack_game_saved():
 
 func _on_OKButton_pressed():
 	ack_game_saved()
+
+
+func _on_BackButton_pressed():
+	get_node("PauseMenuMain").visible = true
+	get_node("OptionsMenu").visible = false
+
+
+func _on_OptionsButton_pressed():
+	get_node("PauseMenuMain").visible = false
+	get_node("OptionsMenu").visible = true
+
+
+func _on_SoundToggle_toggled(toggle):
+	Options.toggle_sound(toggle)
+
+
+func _on_ApplyButton_pressed():
+	Options.apply()

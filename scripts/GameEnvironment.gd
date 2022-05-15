@@ -17,6 +17,9 @@ func _ready():
 				get_node("TestBlocky").deserialize(obj)
 			if obj["id"] == "Character":
 				character_data = obj
+			if obj["id"] == "Options":
+				Options.deserialize(obj)
+				Options.apply()
 	var rolling_chunks = get_node("RollingChunks")
 	rolling_chunks.spawn_chunks_around(init_chunk_x, init_chunk_y, init_chunk_z, true, 2, 1, 2)
 	if character_data:
@@ -44,6 +47,7 @@ func _process(delta):
 func serialized_state():
 	var persistables = get_tree().get_nodes_in_group('persistent')
 	var serialized = []
+	serialized.append(Options.serialize())
 	for persistable in persistables:
 		serialized.append(persistable.serialize())
 	return JSON.print(serialized)

@@ -59,6 +59,7 @@ config/icon="res://icon.png"
 GameSave="*res://scripts/GameSave.gd"
 RegionLoader="*res://scripts/RegionLoader.gd"
 MaterialsList="*res://scripts/MaterialsList.gd"
+Options="*res://scripts/Options.gd"
 
 [editor_plugins]
 
