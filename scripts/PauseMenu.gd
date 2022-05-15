@@ -3,6 +3,9 @@ extends Control
 signal back_to_main
 signal game_saved
 
+func _ready():
+	load_options()
+
 func _input(event):
 	if event.is_action_pressed("pause_menu"):
 		toggle_pause()
@@ -25,6 +28,9 @@ func _on_ExitGame_pressed():
 
 func _on_ContinueButton_pressed():
 	toggle_pause()
+
+func load_options():
+	get_node("OptionsMenu/SoundToggle").pressed = Options.sound_on
 
 func toggle_pause():
 	if !get_node("PauseMenuMain").visible:
@@ -58,6 +64,7 @@ func _on_BackButton_pressed():
 
 
 func _on_OptionsButton_pressed():
+	load_options()
 	get_node("PauseMenuMain").visible = false
 	get_node("OptionsMenu").visible = true
 

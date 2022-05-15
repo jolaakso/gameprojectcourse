@@ -116,7 +116,6 @@ rect_min_size = Vector2( 0, 30 )
 margin_top = 52.0
 margin_right = 114.0
 margin_bottom = 76.0
-pressed = true
 text = "Sound On/Off"
 
 [node name="ApplyButton" type="Button" parent="OptionsMenu"]
