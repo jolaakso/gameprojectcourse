@@ -15,9 +15,6 @@ func initialize_tables():
 	+ "name TEXT PRIMARY KEY, x INT NOT NULL, y INT NOT NULL, z INT NOT NULL," \
 	+ "blocks BLOB NOT NULL, UNIQUE(x, y, z));"
 	db.query(create_chunks_table)
-	var create_region_table = "CREATE TABLE IF NOT EXISTS region(" \
-	+ "seed TEXT PRIMARY KEY);"
-	db.query(create_region_table)
 
 func save_chunk(name, x, y, z, block_bytes):
 	var upsert_chunk = "INSERT INTO chunks(name, x, y, z, blocks) " \
